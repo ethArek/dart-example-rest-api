@@ -1,1 +1,1 @@
-A simple command-line application.
+A simple REST API created in Dart with Shelf framework.
