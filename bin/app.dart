@@ -2,24 +2,23 @@
 // import 'package:shelf_router/shelf_router.dart';
 // import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
-import './controllers/HomeController.dart';
+import 'controllers/MainController.dart';
 import './modules/note/repositories/NoteRepository.dart';
+import 'controllers/NotesController.dart';
 import 'lib/DB.dart';
+import 'modules/note/services/NoteService.dart';
 
 void main() async {
   // Variable for PORT
 
-  DB db = DB();
+  final db = DB();
   await db.initConnection();
-  NoteRepository noteRepository = NoteRepository(db);
+  final noteRepository = NoteRepository(db);
+  final noteService = NoteService(noteRepository);
+  final notesController = NotesController(noteService);
 
-  var note = await noteRepository.get('7211418c-2c72-4c6b-a449-5b36c86f5c16');
-  print(note);
+  final mainController = MainController(notesController);
 
-  // //Instantiate Home Controller
-  // final home = HomeController();
-  // // Create server
-  // final server = await shelf_io.serve(home.handler, '0.0.0.0', 7777);
-  // // Server on message
-  // print('☀️ Server running on localhost:${server.port} ☀️');
+  final server = await shelf_io.serve(mainController.handler, '0.0.0.0', 8000);
+  print('Server running on localhost:${server.port}');
 }

@@ -1,15 +1,18 @@
-// import 'dart:async' show Future;
 import 'package:postgres/postgres.dart';
-import 'package:shelf/shelf.dart';
 import '../../../lib/DB.dart';
-// import 'package:shelf/shelf_io.dart' as shelf_io;
 
 class Note {
   String id;
   String text;
-  String created_at;
+  DateTime created_at;
 
   Note(this.id, this.text, this.created_at);
+
+   Map toJson() => {
+     'id': id,
+        'text': text,
+        'created_at': created_at.toIso8601String()
+      };
 }
 
 class NoteRepository {
@@ -46,7 +49,7 @@ class NoteRepository {
     if (result.isEmpty) {
       throw Exception('Note not found');
     }
-    
+
     return mapDbRows(result);
   }
 
