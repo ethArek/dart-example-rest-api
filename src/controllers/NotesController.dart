@@ -35,15 +35,13 @@ class NotesController {
 
       var notesList = await noteService.list(limit, offset);
 
-      return Response.ok(
-          jsonEncode({'success': true, 'data': notesList}));
+      return Response.ok(jsonEncode({'success': true, 'data': notesList}));
     });
 
     router.get('/<id>', (Request req, String id) async {
       var note = await noteService.get(id);
 
-      return Response.ok(
-          jsonEncode({'success': true, 'data': note}));
+      return Response.ok(jsonEncode({'success': true, 'data': note}));
     });
 
     router.all('/<ignored|.*>', (Request request) => Response.notFound('null'));

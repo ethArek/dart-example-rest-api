@@ -7,7 +7,6 @@ class MainController {
 
   MainController(this.notesController);
 
-  // Define our getter for our handler
   Handler get handler {
     final router = Router();
 

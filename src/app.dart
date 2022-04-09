@@ -8,7 +8,7 @@ import 'modules/note/services/NoteService.dart';
 void main() async {
   final db = DB();
   await db.initConnection();
-  
+
   final noteRepository = NoteRepository(db);
   final noteService = NoteService(noteRepository);
   final notesController = NotesController(noteService);
