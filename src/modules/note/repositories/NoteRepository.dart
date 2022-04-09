@@ -17,14 +17,14 @@ class NoteRepository {
 
   NoteRepository(this.db);
 
-  create(String text) async {
+  void create(String text) async {
     var query =
         'INSERT INTO notes (text) VALUES (${PostgreSQLFormat.id('text', type: PostgreSQLDataType.text)}) RETURNING (id, text, created_at)'; // Despite RETURNING in query I cannot get values from it
 
     await db.connection.query(query, substitutionValues: {'text': text});
   }
 
-  get(String id) async {
+  Future<Note> get(String id) async {
     var query =
         'SELECT id, text, created_at FROM notes WHERE id = ${PostgreSQLFormat.id('id', type: PostgreSQLDataType.uuid)}';
     var result =
@@ -37,13 +37,13 @@ class NoteRepository {
     return mapDbRow(result[0]);
   }
 
-  list(int limit, int offset) async {
+  Future<List<Note>> list(int limit, int offset) async {
     var query =
         'SELECT id, text, created_at FROM notes LIMIT $limit OFFSET $offset';
 
     var result = await db.connection.query(query);
     if (result.isEmpty) {
-      throw Exception('Note not found');
+      return [];
     }
 
     return mapDbRows(result);

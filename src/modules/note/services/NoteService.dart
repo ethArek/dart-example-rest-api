@@ -5,15 +5,15 @@ class NoteService {
 
   NoteService(this.noteRepository);
 
-  create(String text) async {
+  void create(String text) async {
     return noteRepository.create(text);
   }
 
-  get(String id) async {
+  Future<Note> get(String id) async {
     return noteRepository.get(id);
   }
 
-  list(int limit, int offset) async {
+  Future<List<Note>> list(int limit, int offset) async {
     return noteRepository.list(limit, offset);
   }
 }

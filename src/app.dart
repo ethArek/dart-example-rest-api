@@ -15,6 +15,6 @@ void main() async {
 
   final mainController = MainController(notesController);
 
-  final server = await shelf_io.serve(mainController.handler, '0.0.0.0', 8000);
+  final server = await shelf_io.serve(mainController.handler, '0.0.0.0', 8001);
   print('Server running on localhost:${server.port}');
 }
