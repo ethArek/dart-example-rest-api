@@ -5,7 +5,6 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf.dart';
 
 import '../modules/note/services/NoteService.dart';
-// import 'package:shelf/shelf_io.dart' as shelf_io;
 
 class NotesController {
   NoteService noteService;
@@ -36,19 +35,15 @@ class NotesController {
 
       var notesList = await noteService.list(limit, offset);
 
-      return Response.ok(jsonEncode({
-        'success': true,
-        'data': jsonEncode(notesList)
-      }));
+      return Response.ok(
+          jsonEncode({'success': true, 'data': jsonEncode(notesList)}));
     });
 
     router.get('/<id>', (Request req, String id) async {
       var note = await noteService.get(id);
 
-      return Response.ok(jsonEncode({
-        'success': true,
-        'data': jsonEncode(note)
-      }));
+      return Response.ok(
+          jsonEncode({'success': true, 'data': jsonEncode(note)}));
     });
 
     router.all('/<ignored|.*>', (Request request) => Response.notFound('null'));

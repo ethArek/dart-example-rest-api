@@ -8,11 +8,8 @@ class Note {
 
   Note(this.id, this.text, this.created_at);
 
-   Map toJson() => {
-     'id': id,
-        'text': text,
-        'created_at': created_at.toIso8601String()
-      };
+  Map toJson() =>
+      {'id': id, 'text': text, 'created_at': created_at.toIso8601String()};
 }
 
 class NoteRepository {
@@ -24,7 +21,7 @@ class NoteRepository {
     var query =
         'INSERT INTO notes (text) VALUES (${PostgreSQLFormat.id('text', type: PostgreSQLDataType.text)}) RETURNING (id, text, created_at)'; // Despite RETURNING in query I cannot get values from it
 
-        await db.connection.query(query, substitutionValues: {'text': text});
+    await db.connection.query(query, substitutionValues: {'text': text});
   }
 
   get(String id) async {
@@ -43,7 +40,6 @@ class NoteRepository {
   list(int limit, int offset) async {
     var query =
         'SELECT id, text, created_at FROM notes LIMIT $limit OFFSET $offset';
-
 
     var result = await db.connection.query(query);
     if (result.isEmpty) {
