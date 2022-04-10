@@ -1,15 +1,15 @@
-// import 'dart:async' show Future;
 import 'dart:convert';
 
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf.dart';
 
-import '../modules/note/services/NoteService.dart';
+import '../dependencies/Dependencies.dart';
+import '../modules/note/NoteModule.dart';
 
 class NotesController {
-  NoteService noteService;
+  Dependencies dependencies;
 
-  NotesController(this.noteService);
+  NotesController(this.dependencies);
 
   Router get router {
     final router = Router();
@@ -33,13 +33,14 @@ class NotesController {
         offset = 0;
       }
 
-      var notesList = await noteService.list(limit, offset);
+      var notesList =
+          await dependencies.noteModule.noteService.list(limit, offset);
 
       return Response.ok(jsonEncode({'success': true, 'data': notesList}));
     });
 
     router.get('/<id>', (Request req, String id) async {
-      var note = await noteService.get(id);
+      var note = await dependencies.noteModule.noteService.get(id);
 
       return Response.ok(jsonEncode({'success': true, 'data': note}));
     });
