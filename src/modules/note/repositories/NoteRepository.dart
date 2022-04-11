@@ -24,14 +24,14 @@ class NoteRepository {
 
   NoteRepository(this.db);
 
-  void create(String userId, String text) async {
+  Future<Note> create(String userId, String text) async {
     var query =
-        'INSERT INTO notes (user_id, text) VALUES (${PostgreSQLFormat.id('userId', type: PostgreSQLDataType.uuid)}, ${PostgreSQLFormat.id('text', type: PostgreSQLDataType.text)}) RETURNING (id, text, created_at)'; // Despite RETURNING in query I cannot get values from it
+        'INSERT INTO notes (user_id, text) VALUES (${PostgreSQLFormat.id('userId', type: PostgreSQLDataType.uuid)}, ${PostgreSQLFormat.id('text', type: PostgreSQLDataType.text)}) RETURNING id, text, created_at'; // Despite RETURNING in query I cannot get values from it
 
     var result = await db.connection
         .query(query, substitutionValues: {'userId': userId, 'text': text});
 
-    print(jsonEncode(result));
+    return mapDbRow(result[0]);
   }
 
   Future<Note> get(String id) async {
