@@ -9,8 +9,11 @@ class User {
 
   User(this.id, this.nickname, this.password, this.createdAt);
 
-  Map toJson() =>
-      {'id': id, 'nickname': nickname, 'created_at': createdAt.toIso8601String()};
+  Map toJson() => {
+        'id': id,
+        'nickname': nickname,
+        'created_at': createdAt.toIso8601String()
+      };
 }
 
 class UserRepository {
@@ -22,7 +25,8 @@ class UserRepository {
     var query =
         'INSERT INTO users (nickname, password) VALUES (${PostgreSQLFormat.id('nickname', type: PostgreSQLDataType.varChar)}, ${PostgreSQLFormat.id('password', type: PostgreSQLDataType.varChar)}) RETURNING (id, text, created_at)';
 
-    await db.connection.query(query, substitutionValues: {'nickname': nickname, 'password': password});
+    await db.connection.query(query,
+        substitutionValues: {'nickname': nickname, 'password': password});
   }
 
   Future<User> get(String id) async {

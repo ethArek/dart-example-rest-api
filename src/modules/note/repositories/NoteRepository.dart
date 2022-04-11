@@ -5,14 +5,18 @@ import '../../../lib/DB.dart';
 
 class Note {
   String id;
-    String userId;
+  String userId;
   String text;
   DateTime createdAt;
 
   Note(this.id, this.userId, this.text, this.createdAt);
 
-  Map toJson() =>
-      {'id': id, 'userId': userId, 'text': text, 'created_at': createdAt.toIso8601String()};
+  Map toJson() => {
+        'id': id,
+        'userId': userId,
+        'text': text,
+        'created_at': createdAt.toIso8601String()
+      };
 }
 
 class NoteRepository {
@@ -24,7 +28,8 @@ class NoteRepository {
     var query =
         'INSERT INTO notes (user_id, text) VALUES (${PostgreSQLFormat.id('userId', type: PostgreSQLDataType.uuid)}, ${PostgreSQLFormat.id('text', type: PostgreSQLDataType.text)}) RETURNING (id, text, created_at)'; // Despite RETURNING in query I cannot get values from it
 
-    var result = await db.connection.query(query, substitutionValues: {'userId': userId, 'text': text});
+    var result = await db.connection
+        .query(query, substitutionValues: {'userId': userId, 'text': text});
 
     print(jsonEncode(result));
   }

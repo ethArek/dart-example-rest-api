@@ -4,7 +4,6 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_plus/shelf_plus.dart';
 
-
 import '../dependencies/Dependencies.dart';
 import '../modules/note/NoteModule.dart';
 
@@ -50,9 +49,10 @@ class NotesController {
     router.post('/', (Request req) async {
       var body = await req.body.asJson;
 
-      await dependencies.noteModule.noteService.create(userId: body['userId'], text: body['text']);
+      await dependencies.noteModule.noteService
+          .create(userId: body['userId'], text: body['text']);
 
-      return Response.ok(jsonEncode({ 'success': true}));
+      return Response.ok(jsonEncode({'success': true}));
     });
 
     router.all('/<ignored|.*>', (Request request) => Response.notFound('null'));
