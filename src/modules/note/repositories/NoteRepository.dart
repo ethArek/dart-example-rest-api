@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:postgres/postgres.dart';
 import '../../../lib/DB.dart';
 
@@ -22,7 +24,9 @@ class NoteRepository {
     var query =
         'INSERT INTO notes (user_id, text) VALUES (${PostgreSQLFormat.id('userId', type: PostgreSQLDataType.uuid)}, ${PostgreSQLFormat.id('text', type: PostgreSQLDataType.text)}) RETURNING (id, text, created_at)'; // Despite RETURNING in query I cannot get values from it
 
-    await db.connection.query(query, substitutionValues: {'userId': userId, 'text': text});
+    var result = await db.connection.query(query, substitutionValues: {'userId': userId, 'text': text});
+
+    print(jsonEncode(result));
   }
 
   Future<Note> get(String id) async {

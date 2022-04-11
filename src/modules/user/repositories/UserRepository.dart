@@ -3,13 +3,14 @@ import '../../../lib/DB.dart';
 
 class User {
   String id;
-  String text;
-  DateTime created_at;
+  String nickname;
+  String password;
+  DateTime createdAt;
 
-  User(this.id, this.text, this.created_at);
+  User(this.id, this.nickname, this.password, this.createdAt);
 
   Map toJson() =>
-      {'id': id, 'text': text, 'created_at': created_at.toIso8601String()};
+      {'id': id, 'nickname': nickname, 'created_at': createdAt.toIso8601String()};
 }
 
 class UserRepository {
@@ -17,16 +18,16 @@ class UserRepository {
 
   UserRepository(this.db);
 
-  void create(String text) async {
+  void create({required String nickname, required String password}) async {
     var query =
-        'INSERT INTO users (text) VALUES (${PostgreSQLFormat.id('text', type: PostgreSQLDataType.text)}) RETURNING (id, text, created_at)'; // Despite RETURNING in query I cannot get values from it
+        'INSERT INTO users (nickname, password) VALUES (${PostgreSQLFormat.id('nickname', type: PostgreSQLDataType.varChar)}, ${PostgreSQLFormat.id('password', type: PostgreSQLDataType.varChar)}) RETURNING (id, text, created_at)';
 
-    await db.connection.query(query, substitutionValues: {'text': text});
+    await db.connection.query(query, substitutionValues: {'nickname': nickname, 'password': password});
   }
 
   Future<User> get(String id) async {
     var query =
-        'SELECT id, text, created_at FROM users WHERE id = ${PostgreSQLFormat.id('id', type: PostgreSQLDataType.uuid)}';
+        'SELECT id, nickname, password, created_at FROM users WHERE id = ${PostgreSQLFormat.id('id', type: PostgreSQLDataType.uuid)}';
     var result =
         await db.connection.query(query, substitutionValues: {'id': id});
 
@@ -39,7 +40,7 @@ class UserRepository {
 
   Future<List<User>> list(int limit, int offset) async {
     var query =
-        'SELECT id, text, created_at FROM users LIMIT $limit OFFSET $offset';
+        'SELECT id, nickname, password, created_at FROM users LIMIT $limit OFFSET $offset';
 
     var result = await db.connection.query(query);
     if (result.isEmpty) {
@@ -54,6 +55,6 @@ class UserRepository {
   }
 
   User mapDbRow(List row) {
-    return User(row[0], row[1], row[2]);
+    return User(row[0], row[1], row[2], row[3]);
   }
 }

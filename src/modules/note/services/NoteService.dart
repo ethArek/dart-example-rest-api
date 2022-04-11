@@ -5,7 +5,7 @@ class NoteService {
 
   NoteService(this.noteRepository);
 
-  void create({required String userId, required String text }) async {
+  Future<void> create({required String userId, required String text }) async {
     return noteRepository.create(userId, text);
   }
 

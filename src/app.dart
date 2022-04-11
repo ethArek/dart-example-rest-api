@@ -1,14 +1,12 @@
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'controllers/MainController.dart';
-import './modules/note/repositories/NoteRepository.dart';
 import 'controllers/NotesController.dart';
 import 'dependencies/BaseDependencies.dart';
 import 'dependencies/Dependencies.dart';
-import 'lib/DB.dart';
-import 'modules/note/services/NoteService.dart';
 
 void main() async {
   final baseDependencies = BaseDependencies();
+  await baseDependencies.db.initConnection();
   final dependencies = Dependencies(baseDependencies);
 
   final notesController = NotesController(dependencies);

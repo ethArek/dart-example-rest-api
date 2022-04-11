@@ -5,8 +5,8 @@ class UserService {
 
   UserService(this.userRepository);
 
-  void create(String text) async {
-    return userRepository.create(text);
+  void create({required String nickname, required String password}) async {
+    return userRepository.create(nickname: nickname, password: password);
   }
 
   Future<User> get(String id) async {

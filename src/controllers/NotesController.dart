@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf.dart';
+import 'package:shelf_plus/shelf_plus.dart';
+
 
 import '../dependencies/Dependencies.dart';
 import '../modules/note/NoteModule.dart';
@@ -45,10 +47,12 @@ class NotesController {
       return Response.ok(jsonEncode({'success': true, 'data': note}));
     });
 
-    router.post('/', (Request req, String id) async {
-      var note = await dependencies.noteModule.noteService.create(id);
+    router.post('/', (Request req) async {
+      var body = await req.body.asJson;
 
-      return Response.ok(jsonEncode({'success': true, 'data': note}));
+      await dependencies.noteModule.noteService.create(userId: body['userId'], text: body['text']);
+
+      return Response.ok(jsonEncode({ 'success': true}));
     });
 
     router.all('/<ignored|.*>', (Request request) => Response.notFound('null'));
