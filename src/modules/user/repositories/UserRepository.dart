@@ -21,12 +21,19 @@ class UserRepository {
 
   UserRepository(this.db);
 
-  void create({required String nickname, required String password}) async {
+  Future<User> create(
+      {required String nickname, required String password}) async {
     var query =
         'INSERT INTO users (nickname, password) VALUES (${PostgreSQLFormat.id('nickname', type: PostgreSQLDataType.varChar)}, ${PostgreSQLFormat.id('password', type: PostgreSQLDataType.varChar)}) RETURNING (id, text, created_at)';
 
-    await db.connection.query(query,
+    var result = await db.connection.query(query,
         substitutionValues: {'nickname': nickname, 'password': password});
+
+    if (result.isEmpty) {
+      throw Exception('Insert user error');
+    }
+
+    return mapDbRow(result[0]);
   }
 
   Future<User> get(String id) async {

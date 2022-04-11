@@ -31,6 +31,10 @@ class NoteRepository {
     var result = await db.connection
         .query(query, substitutionValues: {'userId': userId, 'text': text});
 
+    if (result.isEmpty) {
+      throw Exception('Insert note error');
+    }
+
     return mapDbRow(result[0]);
   }
 
