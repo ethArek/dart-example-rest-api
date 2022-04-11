@@ -3,13 +3,14 @@ import '../../../lib/DB.dart';
 
 class Note {
   String id;
+    String userId;
   String text;
-  DateTime created_at;
+  DateTime createdAt;
 
-  Note(this.id, this.text, this.created_at);
+  Note(this.id, this.userId, this.text, this.createdAt);
 
   Map toJson() =>
-      {'id': id, 'text': text, 'created_at': created_at.toIso8601String()};
+      {'id': id, 'userId': userId, 'text': text, 'created_at': createdAt.toIso8601String()};
 }
 
 class NoteRepository {
@@ -17,16 +18,16 @@ class NoteRepository {
 
   NoteRepository(this.db);
 
-  void create(String text) async {
+  void create(String userId, String text) async {
     var query =
-        'INSERT INTO notes (text) VALUES (${PostgreSQLFormat.id('text', type: PostgreSQLDataType.text)}) RETURNING (id, text, created_at)'; // Despite RETURNING in query I cannot get values from it
+        'INSERT INTO notes (user_id, text) VALUES (${PostgreSQLFormat.id('userId', type: PostgreSQLDataType.uuid)}, ${PostgreSQLFormat.id('text', type: PostgreSQLDataType.text)}) RETURNING (id, text, created_at)'; // Despite RETURNING in query I cannot get values from it
 
-    await db.connection.query(query, substitutionValues: {'text': text});
+    await db.connection.query(query, substitutionValues: {'userId': userId, 'text': text});
   }
 
   Future<Note> get(String id) async {
     var query =
-        'SELECT id, text, created_at FROM notes WHERE id = ${PostgreSQLFormat.id('id', type: PostgreSQLDataType.uuid)}';
+        'SELECT id, user_id, text, created_at FROM notes WHERE id = ${PostgreSQLFormat.id('id', type: PostgreSQLDataType.uuid)}';
     var result =
         await db.connection.query(query, substitutionValues: {'id': id});
 
@@ -39,7 +40,7 @@ class NoteRepository {
 
   Future<List<Note>> list(int limit, int offset) async {
     var query =
-        'SELECT id, text, created_at FROM notes LIMIT $limit OFFSET $offset';
+        'SELECT id, user_id, text, created_at FROM notes LIMIT $limit OFFSET $offset';
 
     var result = await db.connection.query(query);
     if (result.isEmpty) {
@@ -54,6 +55,6 @@ class NoteRepository {
   }
 
   Note mapDbRow(List row) {
-    return Note(row[0], row[1], row[2]);
+    return Note(row[0], row[1], row[2], row[3]);
   }
 }

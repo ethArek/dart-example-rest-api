@@ -45,6 +45,12 @@ class NotesController {
       return Response.ok(jsonEncode({'success': true, 'data': note}));
     });
 
+    router.post('/', (Request req, String id) async {
+      var note = await dependencies.noteModule.noteService.create(id);
+
+      return Response.ok(jsonEncode({'success': true, 'data': note}));
+    });
+
     router.all('/<ignored|.*>', (Request request) => Response.notFound('null'));
 
     return router;
